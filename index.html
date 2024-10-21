@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  background-color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: #ffe6f0;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 80vw;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.roll-no {
+  margin: 20px 0;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #444;
+}
+#rollNumber{
+    font-size: 7rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.btn {
+  padding: 15px 10px;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 45%;
+}
+
+#absent {
+  background-color: #ff4d4d;
+}
+
+#present {
+  background-color: #4caf50;
+}
+
+.other {
+  margin: 20px 0;
+}
+
+.submit {
+  background-color: #00bfff;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  font-size: 30px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit:hover {
+  background-color: #0099cc;
+}
+
+#result {
+  background-color: #f0f8ff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  width: 350px;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  display: none;
+}
+
+.hidden {
+  display: none;
+}
+
+h2 {
+  font-size: 30px;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+button#screenshot {
+  background-color: #0073e6;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+}
+
+</style>
+<body>
+  <div class="container" id="attendanceForm">
+    <div class="form-group">
+      <label for="date">Date :-</label>
+      <input type="date" id="date">
+    </div>
+
+    <div class="form-group">
+      <label for="subject">Subject :-</label>
+      <select id="subject">
+        <option value="COA">COA</option>
+        <option value="DSA">DSA</option>
+        <option value="DSTL">DSTL</option>
+        <option value="Cybersecurity">Cybersecurity</option>
+        <option value="TC">TC</option>
+        <option value="DE">DE</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="lectureNo">Lecture no :-</label>
+      <select id="lectureNo">
+        <option value="1st lecture">1st lecture</option>
+        <option value="2nd lecture">2nd lecture</option>
+        <option value="3rd lecture">3rd lecture</option>
+        <option value="4th lecture">4th lecture</option>
+        <option value="5th lecture">5th lecture</option>
+        <option value="6th lecture">6th lecture</option>
+        <option value="7th lecture">7th lecture</option>
+      </select>
+    </div>
+
+    <div class="roll-no">
+      <span id="rollNumber">01</span> <br>Roll No
+    </div>
+
+    <div class="buttons">
+      <button class="btn" id="absent">ABSENT</button>
+      <button class="btn" id="present">PRESENT</button>
+    </div>
+
+    <div class="other">
+      <label for="otherText">Other :-</label>
+      <input type="text" id="otherText">
+    </div>
+
+    <button class="submit" id="submit">SUBMIT</button>
+  </div>
+
+  <div id="result" class="hidden"></div>
+
+  <script >
+let rollNo = 1;
+let presentArray = [];
+let absentArray = [];
+
+document.getElementById("present").addEventListener("click", function () {
+  presentArray.push(getRollNumber());
+  nextRoll();
+});
+
+document.getElementById("absent").addEventListener("click", function () {
+  absentArray.push(getRollNumber());
+  nextRoll();
+});
+
+function getRollNumber() {
+  if (rollNo <= 77) {
+    return rollNo;
+  } else if (rollNo <= 85) {
+    return `L${rollNo - 77}`;
+  }
+}
+
+function nextRoll() {
+  rollNo++;
+  if (rollNo <= 85) {
+    let displayRollNo = rollNo <= 77 ? rollNo.toString().padStart(2, '0') : `L${rollNo - 77}`;
+    document.getElementById("rollNumber").textContent = displayRollNo;
+  } else {
+    document.getElementById("rollNumber").textContent = "Done";
+    document.getElementById("absent").disabled = true;
+    document.getElementById("present").disabled = true;
+  }
+}
+
+document.getElementById("submit").addEventListener("click", function () {
+  const date = document.getElementById("date").value;
+  const subject = document.getElementById("subject").value;
+  const lectureNo = document.getElementById("lectureNo").value;
+  const otherText = document.getElementById("otherText").value;
+
+  // Hide the form after submission
+  document.getElementById("attendanceForm").classList.add("hidden");
+
+  let result = `
+    <h2>Attendance Summary</h2>
+    <p><strong>Date:</strong> ${date}</p>
+    <p><strong>Subject:</strong> ${subject}</p>
+    <p><strong>Lecture:</strong> ${lectureNo}</p>
+    <p><strong>Present:</strong> ${presentArray.join(', ')}</p>
+    <p><strong>Absent:</strong> ${absentArray.join(', ')}</p>
+    <p><strong>Other:</strong> ${otherText}</p>
+    <button id="screenshot">Take Screenshot</button>
+  `;
+
+  // Show the result in the same box
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = result;
+  resultDiv.style.display = "block";
+
+  // Add screenshot functionality
+  document.getElementById("screenshot").addEventListener("click", function () {
+    window.print();
+  });
+});
+
+  </script>
+</body>
+</html>
